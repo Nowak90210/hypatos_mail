@@ -1,46 +1,32 @@
 package app
 
 import (
-	"context"
-	"fmt"
-	"os"
-	"time"
-
-	"github.com/mailgun/mailgun-go/v3"
+	mailprovider "github.com/Nowak90210/hypatos_mail/mail_provider"
+	"log"
 )
-
-var (
-	MailGunDomain = os.Getenv("MAIL_GUN_DOMAIN")
-	MailGunAPIKey = os.Getenv("MAIL_GUN_API_KEY")
-)
-
-//test
-func init() {
-	fmt.Println("MailGunDomain: ", MailGunDomain)
-	fmt.Println("MailGunAPIKey: ", MailGunAPIKey)
-}
 
 type Service struct {
-	// mail Mail
+	providers []mailprovider.MailProvider
 }
 
-func (s *Service) SendMessage(mail Mail) (string, string, error) {
+func NewService(prv []mailprovider.MailProvider) *Service {
+	return &Service{
+		providers: prv,
+	}
+}
+func (s *Service) SendMessage(mailRequest mailprovider.MailRequest) (string, error) {
+	var lastError error
 
-	mg := mailgun.NewMailgun(MailGunDomain, MailGunAPIKey)
+	for _, p := range s.providers {
+		msg, err := p.SendMail(mailRequest)
+		if err == nil {
+			log.Printf("Provider %v, wszystko działa \n", p)
+			return msg, nil
+		}
 
-	m := mg.NewMessage(
-		"Testowy User <"+mail.From+">",
-		mail.Subject,
-		mail.Text,
-		mail.To,
-	)
+		lastError = err
+		log.Println("Trochę chujnia, bo nie wyszło, provider: %T, error: %s", p, err.Error())
+	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
-	defer cancel()
-
-	res, err := mg.GetDomain(ctx, MailGunDomain)
-	fmt.Println("Res: ", res)
-	fmt.Println("Err: ", err)
-
-	return mg.Send(ctx, m)
+	return "", lastError
 }

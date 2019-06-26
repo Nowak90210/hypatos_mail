@@ -3,6 +3,7 @@ package transport
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Nowak90210/hypatos_mail/mail_provider"
 	"io/ioutil"
 	"net/http"
 
@@ -27,23 +28,22 @@ func (h *Handler) sendMail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var mail app.Mail
-	if err := json.Unmarshal(body, &mail); err != nil {
+	var mr mailprovider.MailRequest
+	if err := json.Unmarshal(body, &mr); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if err := mail.Validate(); err != nil {
+	if err := mr.Validate(); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	msg, id, err := h.service.SendMessage(mail)
+	msg, err := h.service.SendMessage(mr)
 	if err != nil {
-		w.Write([]byte(err.Error()))
-
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	w.Write([]byte("\n"))
-	w.Write([]byte(fmt.Sprintf("MSG: %s \n", msg)))
-	w.Write([]byte(fmt.Sprintf("ID: %s \n", id)))
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte(fmt.Sprintf("msg: %s \n", msg)))
 }

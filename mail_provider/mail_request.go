@@ -1,4 +1,4 @@
-package app
+package mailprovider
 
 import (
 	"errors"
@@ -8,25 +8,22 @@ import (
 var (
 	ErrInvalidField = errors.New("invalid field")
 	ErrEmptyField   = errors.New("empty field")
+	mailRegEx       = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 )
 
-type Mail struct {
-	From    string `json:"from"`
+type MailRequest struct {
+	From    EmailType
 	Subject string `json:"subject"`
 	Text    string `json:"text"`
-	To      string `json:"to"`
+	To      EmailType
 }
 
-func NewMail(from, subject, text, to string) *Mail {
-	return &Mail{
-		From:    from,
-		Subject: subject,
-		Text:    text,
-		To:      to,
-	}
+type EmailType struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
-func (m *Mail) Validate() error {
+func (m *MailRequest) Validate() error {
 	if err := m.validateFrom(); err != nil {
 		return err
 	}
@@ -43,31 +40,31 @@ func (m *Mail) Validate() error {
 	return nil
 }
 
-func (m *Mail) validateFrom() error {
-	if m.From == "" {
+func (m *MailRequest) validateFrom() error {
+	if m.From.Email == "" {
 		return ErrEmptyField
 	}
 
-	if isEmailValid(m.From) {
+	if isEmailValid(m.From.Email) {
 		return nil
 	}
 
 	return ErrInvalidField
 }
 
-func (m *Mail) validateTo() error {
-	if m.To == "" {
+func (m *MailRequest) validateTo() error {
+	if m.To.Email == "" {
 		return ErrEmptyField
 	}
 
-	if isEmailValid(m.To) {
+	if isEmailValid(m.To.Email) {
 		return nil
 	}
 
 	return ErrInvalidField
 }
 
-func (m *Mail) validateSubject() error {
+func (m *MailRequest) validateSubject() error {
 	if m.Subject == "" {
 		return ErrEmptyField
 	}
@@ -75,7 +72,7 @@ func (m *Mail) validateSubject() error {
 	return nil
 }
 
-func (m *Mail) validateText() error {
+func (m *MailRequest) validateText() error {
 	if m.Text == "" {
 		return ErrEmptyField
 	}
@@ -84,6 +81,6 @@ func (m *Mail) validateText() error {
 }
 
 func isEmailValid(email string) bool {
-	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+	re := regexp.MustCompile(mailRegEx)
 	return re.MatchString(email)
 }
