@@ -38,7 +38,7 @@ func (p *MailGunProvider) SendMail(mr MailRequest) (string, error) {
 	message := p.generateMessageFromMailRequest(mr, mg)
 	msg, _, err := mg.Send(ctx, message)
 	if err != nil {
-		log.Println("Error: ", err)
+		log.Println("MailGunProvider/SendMail: ", err)
 		return "", err
 	}
 

@@ -1,13 +1,13 @@
 package mailprovider
 
 import (
-	"errors"
+	"github.com/pkg/errors"
 	"regexp"
 )
 
 var (
-	ErrInvalidField = errors.New("invalid field")
-	ErrEmptyField   = errors.New("empty field")
+	ErrInvalidField = errors.New("Invalid field")
+	ErrEmptyField   = errors.New("Empty field")
 	mailRegEx       = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 )
 
@@ -42,31 +42,31 @@ func (m *MailRequest) Validate() error {
 
 func (m *MailRequest) validateFrom() error {
 	if m.From.Email == "" {
-		return ErrEmptyField
+		return errors.Wrap(ErrEmptyField, "Field from{email} cannot be empty")
 	}
 
 	if isEmailValid(m.From.Email) {
 		return nil
 	}
 
-	return ErrInvalidField
+	return errors.Wrapf(ErrInvalidField, "Field from{email} must be a mail address, %s given", m.To.Email)
 }
 
 func (m *MailRequest) validateTo() error {
 	if m.To.Email == "" {
-		return ErrEmptyField
+		return errors.Wrap(ErrEmptyField, "Field to{email} cannot be empty")
 	}
 
 	if isEmailValid(m.To.Email) {
 		return nil
 	}
 
-	return ErrInvalidField
+	return errors.Wrapf(ErrInvalidField, "Field to{email} must be a mail address, %s given", m.To.Email)
 }
 
 func (m *MailRequest) validateSubject() error {
 	if m.Subject == "" {
-		return ErrEmptyField
+		return errors.Wrap(ErrEmptyField, "Subject cannot be empty")
 	}
 
 	return nil
@@ -74,7 +74,7 @@ func (m *MailRequest) validateSubject() error {
 
 func (m *MailRequest) validateText() error {
 	if m.Text == "" {
-		return ErrEmptyField
+		return errors.Wrap(ErrEmptyField, "Text cannot be empty")
 	}
 
 	return nil

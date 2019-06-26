@@ -29,7 +29,7 @@ func (p *SendGridProvider) SendMail(mr MailRequest) (string, error) {
 	client := sendgrid.NewSendClient(p.apiKey)
 	response, err := client.Send(message)
 	if err != nil {
-		log.Println(err)
+		log.Println("SendGridProvider/SendMail: ", err)
 		return "", err
 	}
 
