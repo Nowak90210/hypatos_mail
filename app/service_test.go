@@ -2,32 +2,33 @@ package app
 
 import (
 	"errors"
-	mailprovider "github.com/Nowak90210/hypatos_mail/mail_provider"
+	"github.com/Nowak90210/hypatos_mail/mail/provider"
+	"github.com/Nowak90210/hypatos_mail/mail/request"
 	"testing"
 )
 
 var (
 	errorMessage    = "Error Message"
-	noErrorProvider = mailprovider.ProviderMock{nil}
-	errorProvider   = mailprovider.ProviderMock{errors.New(errorMessage)}
+	noErrorProvider = provider.ProviderMock{nil}
+	errorProvider   = provider.ProviderMock{errors.New(errorMessage)}
 )
 
 func TestSendMessage(t *testing.T) {
 
 	testCases := []struct {
 		name        string
-		mr          mailprovider.MailRequest
+		mr          request.MailRequest
 		expectedErr error
-		providers   []mailprovider.MailProvider
+		providers   []provider.MailProvider
 	}{
 		{
-			"No Error", mailprovider.MailRequest{}, nil, []mailprovider.MailProvider{noErrorProvider},
+			"No Error", request.MailRequest{}, nil, []provider.MailProvider{noErrorProvider},
 		},
 		{
-			"First with Error", mailprovider.MailRequest{}, nil, []mailprovider.MailProvider{errorProvider, noErrorProvider},
+			"First with Error", request.MailRequest{}, nil, []provider.MailProvider{errorProvider, noErrorProvider},
 		},
 		{
-			"Both with Error", mailprovider.MailRequest{}, errors.New(errorMessage), []mailprovider.MailProvider{errorProvider, errorProvider},
+			"Both with Error", request.MailRequest{}, errors.New(errorMessage), []provider.MailProvider{errorProvider, errorProvider},
 		},
 	}
 

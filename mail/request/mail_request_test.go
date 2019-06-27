@@ -1,4 +1,4 @@
-package mailprovider
+package request
 
 import (
 	"testing"

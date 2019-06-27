@@ -1,7 +1,8 @@
-package mailprovider
+package provider
 
 import (
 	"context"
+	"github.com/Nowak90210/hypatos_mail/mail/request"
 	"github.com/mailgun/mailgun-go/v3"
 	"log"
 	"os"
@@ -29,7 +30,7 @@ func init() {
 	}
 }
 
-func (p *MailGunProvider) SendMail(mr MailRequest) error {
+func (p *MailGunProvider) SendMail(mr request.MailRequest) error {
 	mg := mailgun.NewMailgun(p.domain, p.apiKey)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
@@ -46,7 +47,7 @@ func (p *MailGunProvider) SendMail(mr MailRequest) error {
 	return nil
 }
 
-func (p *MailGunProvider) generateMessageFromMailRequest(mr MailRequest, mg *mailgun.MailgunImpl) *mailgun.Message {
+func (p *MailGunProvider) generateMessageFromMailRequest(mr request.MailRequest, mg *mailgun.MailgunImpl) *mailgun.Message {
 	from := p.generateFrom(mr)
 	to := p.generateTo(mr)
 	message := mg.NewMessage(from, mr.Subject, mr.Text, to)
@@ -54,7 +55,7 @@ func (p *MailGunProvider) generateMessageFromMailRequest(mr MailRequest, mg *mai
 	return message
 }
 
-func (p *MailGunProvider) generateFrom(mr MailRequest) string {
+func (p *MailGunProvider) generateFrom(mr request.MailRequest) string {
 	var from string
 
 	if mr.From.Name != "" {
@@ -65,7 +66,7 @@ func (p *MailGunProvider) generateFrom(mr MailRequest) string {
 
 	return from
 }
-func (p *MailGunProvider) generateTo(mr MailRequest) string {
+func (p *MailGunProvider) generateTo(mr request.MailRequest) string {
 	var to string
 
 	if mr.To.Name != "" {

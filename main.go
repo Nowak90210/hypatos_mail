@@ -1,7 +1,7 @@
 package main
 
 import (
-	mailprovider "github.com/Nowak90210/hypatos_mail/mail_provider"
+	"github.com/Nowak90210/hypatos_mail/mail/provider"
 	"log"
 	"net/http"
 
@@ -21,12 +21,12 @@ func main() {
 }
 
 func initService() *app.Service {
-	var providers []mailprovider.MailProvider
+	var providers []provider.MailProvider
 
-	mgProvider := mailprovider.NewMailGunProvider()
-	sgProvider := mailprovider.NewSendGridProvider()
+	//mgProvider := provider.NewMailGunProvider()
+	sgProvider := provider.NewSendGridProvider()
 
-	providers = append(providers, mgProvider)
+	//providers = append(providers, mgProvider)
 	providers = append(providers, sgProvider)
 
 	return app.NewService(providers)

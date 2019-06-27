@@ -2,7 +2,7 @@ package transport
 
 import (
 	"encoding/json"
-	"github.com/Nowak90210/hypatos_mail/mail_provider"
+	"github.com/Nowak90210/hypatos_mail/mail/request"
 	"io/ioutil"
 	"net/http"
 
@@ -26,7 +26,7 @@ func (h *Handler) sendMail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var mr mailprovider.MailRequest
+	var mr request.MailRequest
 	if err := json.Unmarshal(body, &mr); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

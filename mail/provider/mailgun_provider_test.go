@@ -1,22 +1,25 @@
-package mailprovider
+package provider
 
-import "testing"
+import (
+	"github.com/Nowak90210/hypatos_mail/mail/request"
+	"testing"
+)
 
 func TestGenerateFrom(t *testing.T) {
 	testCases := []struct {
 		name     string
 		expected string
-		mr       MailRequest
+		mr       request.MailRequest
 	}{
 		{
 			"Name And Mail",
 			"Tomasz Nowak <tomasz.nowak@cokolwiek.com>",
-			MailRequest{From: EmailType{Name: "Tomasz Nowak", Email: "tomasz.nowak@cokolwiek.com"}},
+			request.MailRequest{From: request.EmailType{Name: "Tomasz Nowak", Email: "tomasz.nowak@cokolwiek.com"}},
 		},
 		{
 			"Only Mail",
 			"tomasz.nowak@cokolwiek.com",
-			MailRequest{From: EmailType{Email: "tomasz.nowak@cokolwiek.com"}},
+			request.MailRequest{From: request.EmailType{Email: "tomasz.nowak@cokolwiek.com"}},
 		},
 	}
 
@@ -34,17 +37,17 @@ func TestGenerateTo(t *testing.T) {
 	testCases := []struct {
 		name     string
 		expected string
-		mr       MailRequest
+		mr       request.MailRequest
 	}{
 		{
 			"Name And Mail",
 			"Tomasz Nowak <tomasz.nowak@cokolwiek.com>",
-			MailRequest{To: EmailType{Name: "Tomasz Nowak", Email: "tomasz.nowak@cokolwiek.com"}},
+			request.MailRequest{To: request.EmailType{Name: "Tomasz Nowak", Email: "tomasz.nowak@cokolwiek.com"}},
 		},
 		{
 			"Only Mail",
 			"tomasz.nowak@cokolwiek.com",
-			MailRequest{To: EmailType{Email: "tomasz.nowak@cokolwiek.com"}},
+			request.MailRequest{To: request.EmailType{Email: "tomasz.nowak@cokolwiek.com"}},
 		},
 	}
 

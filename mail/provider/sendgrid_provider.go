@@ -1,6 +1,7 @@
-package mailprovider
+package provider
 
 import (
+	"github.com/Nowak90210/hypatos_mail/mail/request"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"log"
@@ -23,7 +24,7 @@ func NewSendGridProvider() *SendGridProvider {
 	}
 }
 
-func (p *SendGridProvider) SendMail(mr MailRequest) error {
+func (p *SendGridProvider) SendMail(mr request.MailRequest) error {
 	message := p.generateMessageFromMailRequest(mr)
 	client := sendgrid.NewSendClient(p.apiKey)
 	_, err := client.Send(message)
@@ -35,7 +36,7 @@ func (p *SendGridProvider) SendMail(mr MailRequest) error {
 	return nil
 }
 
-func (p *SendGridProvider) generateMessageFromMailRequest(mr MailRequest) *mail.SGMailV3 {
+func (p *SendGridProvider) generateMessageFromMailRequest(mr request.MailRequest) *mail.SGMailV3 {
 	from := mail.NewEmail(mr.From.Name, mr.From.Email)
 	to := mail.NewEmail(mr.To.Name, mr.To.Email)
 	message := mail.NewSingleEmail(from, mr.Subject, to, mr.Text, " ")

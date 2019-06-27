@@ -3,7 +3,7 @@ package transport
 import (
 	"bytes"
 	"github.com/Nowak90210/hypatos_mail/app"
-	mailprovider "github.com/Nowak90210/hypatos_mail/mail_provider"
+	"github.com/Nowak90210/hypatos_mail/mail/provider"
 	_ "github.com/kylelemons/godebug/diff"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -36,8 +36,8 @@ var (
 	}`)
 	wrongDataBody = []byte(`Wrong data`)
 )
-var emptyProviders = []mailprovider.MailProvider{mailprovider.ProviderMock{nil}}
-var errorProviders = []mailprovider.MailProvider{mailprovider.ProviderMock{errors.New("Error Message")}}
+var emptyProviders = []provider.MailProvider{provider.ProviderMock{nil}}
+var errorProviders = []provider.MailProvider{provider.ProviderMock{errors.New("Error Message")}}
 
 func TestSendMail(t *testing.T) {
 
@@ -46,7 +46,7 @@ func TestSendMail(t *testing.T) {
 		expectedCode int
 		expectedBody string
 		jsonBody     []byte
-		providers    []mailprovider.MailProvider
+		providers    []provider.MailProvider
 	}{
 		{"Happy Path", http.StatusAccepted, "", validBody, emptyProviders},
 		{"Bad Unmarshall",
