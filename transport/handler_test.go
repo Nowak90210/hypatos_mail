@@ -12,18 +12,18 @@ import (
 	"testing"
 )
 
-// RequestBodies
+// Request Bodies
 var (
 	validBody = []byte(`{
 		"from": {
-			"name": "Thomas Nowak",
+			"name": "Tomasz Nowak",
 			"email": "tomasz.nowak@example.com" 
 		},
 		"subject": "Some Subject",
 		"text": "This is a Message Body",
 		"to": {
 			"name": "Tomasz Nowak",
-			"email": "tomasz.grzegorz.nowak@gmail.com"
+			"email": "tomasz.nowak@example.com"
 		}
 	}`)
 	incompleteBody = []byte(`{
@@ -31,7 +31,7 @@ var (
 		"text": "This is a Message Body",
 		"to": {
 			"name": "Tomasz Nowak",
-			"email": "tomasz.grzegorz.nowak@gmail.com"
+			"email": "tomasz.nowak@example.com"
 		}
 	}`)
 	wrongDataBody = []byte(`Wrong data`)

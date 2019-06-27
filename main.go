@@ -23,10 +23,10 @@ func main() {
 func initService() *app.Service {
 	var providers []provider.MailProvider
 
-	//mgProvider := provider.NewMailGunProvider()
+	mgProvider := provider.NewMailGunProvider()
 	sgProvider := provider.NewSendGridProvider()
 
-	//providers = append(providers, mgProvider)
+	providers = append(providers, mgProvider)
 	providers = append(providers, sgProvider)
 
 	return app.NewService(providers)
