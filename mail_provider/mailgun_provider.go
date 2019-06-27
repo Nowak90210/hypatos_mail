@@ -29,21 +29,21 @@ func init() {
 	}
 }
 
-func (p *MailGunProvider) SendMail(mr MailRequest) (string, error) {
+func (p *MailGunProvider) SendMail(mr MailRequest) error {
 	mg := mailgun.NewMailgun(p.domain, p.apiKey)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
 
 	message := p.generateMessageFromMailRequest(mr, mg)
-	msg, _, err := mg.Send(ctx, message)
+	msg, id, err := mg.Send(ctx, message)
 	if err != nil {
 		log.Println("MailGunProvider/SendMail: ", err)
-		return "", err
+		return err
 	}
+	log.Printf("MailGunProvider/SendMail: msg: %s, id: %s ", msg, id)
 
-	//Jakiś msg + id??
-	return msg, nil
+	return nil
 }
 
 func (p *MailGunProvider) generateMessageFromMailRequest(mr MailRequest, mg *mailgun.MailgunImpl) *mailgun.Message {

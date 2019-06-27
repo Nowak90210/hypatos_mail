@@ -14,18 +14,18 @@ func NewService(prv []mailprovider.MailProvider) *Service {
 		providers: prv,
 	}
 }
-func (s *Service) SendMessage(mailRequest mailprovider.MailRequest) (string, error) {
+func (s *Service) SendMessage(mailRequest mailprovider.MailRequest) error {
 	var lastError error
 
 	for _, p := range s.providers {
-		msg, err := p.SendMail(mailRequest)
+		err := p.SendMail(mailRequest)
 		if err == nil {
-			return msg, nil
+			return nil
 		}
 
 		lastError = err
 		log.Printf("app/service/SendMessage, provider: %T, err: %s ", p, err.Error())
 	}
 
-	return "", lastError
+	return lastError
 }

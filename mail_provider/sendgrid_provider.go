@@ -1,7 +1,6 @@
 package mailprovider
 
 import (
-	"fmt"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"log"
@@ -24,22 +23,16 @@ func NewSendGridProvider() *SendGridProvider {
 	}
 }
 
-func (p *SendGridProvider) SendMail(mr MailRequest) (string, error) {
+func (p *SendGridProvider) SendMail(mr MailRequest) error {
 	message := p.generateMessageFromMailRequest(mr)
 	client := sendgrid.NewSendClient(p.apiKey)
-	response, err := client.Send(message)
+	_, err := client.Send(message)
 	if err != nil {
 		log.Println("SendGridProvider/SendMail: ", err)
-		return "", err
+		return err
 	}
 
-	// Zrób z tego jakiś ładny message
-	fmt.Println(response.StatusCode)
-	fmt.Println(response.Body)
-	fmt.Println(response.Headers)
-
-	msg := string(response.StatusCode) + ", body: " + response.Body
-	return msg, nil
+	return nil
 }
 
 func (p *SendGridProvider) generateMessageFromMailRequest(mr MailRequest) *mail.SGMailV3 {

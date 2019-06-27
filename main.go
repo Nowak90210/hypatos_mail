@@ -2,6 +2,7 @@ package main
 
 import (
 	mailprovider "github.com/Nowak90210/hypatos_mail/mail_provider"
+	"log"
 	"net/http"
 
 	"github.com/Nowak90210/hypatos_mail/app"
@@ -10,6 +11,16 @@ import (
 )
 
 func main() {
+	service := initService()
+	router := transport.InitRouter(service)
+
+	err := http.ListenAndServe(":8080", router)
+	if err != nil {
+		log.Fatalf("Server stopped %s", err)
+	}
+}
+
+func initService() *app.Service {
 	var providers []mailprovider.MailProvider
 
 	mgProvider := mailprovider.NewMailGunProvider()
@@ -18,8 +29,5 @@ func main() {
 	providers = append(providers, mgProvider)
 	providers = append(providers, sgProvider)
 
-	service := app.NewService(providers)
-	router := transport.InitRouter(service)
-
-	http.ListenAndServe(":8001", router)
+	return app.NewService(providers)
 }

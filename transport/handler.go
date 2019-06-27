@@ -2,7 +2,6 @@ package transport
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/Nowak90210/hypatos_mail/mail_provider"
 	"io/ioutil"
 	"net/http"
@@ -22,7 +21,6 @@ func newHandler(s *app.Service) *Handler {
 
 func (h *Handler) sendMail(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
-
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -38,12 +36,11 @@ func (h *Handler) sendMail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	msg, err := h.service.SendMessage(mr)
+	err = h.service.SendMessage(mr)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(fmt.Sprintf("msg: %s \n", msg)))
+	w.WriteHeader(http.StatusAccepted)
 }

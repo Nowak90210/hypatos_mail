@@ -1,5 +1,5 @@
 package mailprovider
 
 type MailProvider interface {
-	SendMail(MailRequest) (string, error)
+	SendMail(MailRequest) error
 }
