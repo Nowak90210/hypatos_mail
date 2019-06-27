@@ -49,7 +49,7 @@ func (m *MailRequest) validateFrom() error {
 		return nil
 	}
 
-	return errors.Wrapf(ErrInvalidField, "Field from{email} must be a mail address, %s given", m.To.Email)
+	return errors.Wrapf(ErrInvalidField, "Field from{email} must be a mail address, '%s' given", m.From.Email)
 }
 
 func (m *MailRequest) validateTo() error {
@@ -61,7 +61,7 @@ func (m *MailRequest) validateTo() error {
 		return nil
 	}
 
-	return errors.Wrapf(ErrInvalidField, "Field to{email} must be a mail address, %s given", m.To.Email)
+	return errors.Wrapf(ErrInvalidField, "Field to{email} must be a mail address, '%s' given", m.To.Email)
 }
 
 func (m *MailRequest) validateSubject() error {

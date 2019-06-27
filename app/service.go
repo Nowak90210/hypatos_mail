@@ -14,6 +14,7 @@ func NewService(prv []mailprovider.MailProvider) *Service {
 		providers: prv,
 	}
 }
+
 func (s *Service) SendMessage(mailRequest mailprovider.MailRequest) error {
 	var lastError error
 
